@@ -7,6 +7,15 @@ public class BannerData {
     int errorCode;
     String errorMsg;
     static class DetailData{
+        /*"       {\n" +
+                "             \"category\":\"源码\",\n " +
+                "             \"icon\":\"\",\n" +
+                "             \"id\":22,\n" +
+                "             \"link\": \"https://www.androidos.net.cn/sourcecode\",\n" +
+                "             \"name\":\"androidos\",\n" +
+                "             \"order\":11,\n" +
+                "             \"visible\":1,\n" +
+                "       },\n"*/
         String category;
         String icon;
         int id;

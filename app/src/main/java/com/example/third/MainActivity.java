@@ -1,5 +1,6 @@
 package com.example.third;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
       TextView mTvLink;
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 // data是⼀个对象集合
             JSONArray jsonArray = jsonObject.getJSONArray("data");
             BannerData.DetailData detailData;
+
             for (int i = 0; i < jsonArray.length(); i++) {
 // 遍历数组，给集合添加对象
                 detailData = new BannerData.DetailData();
