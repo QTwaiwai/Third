@@ -29,6 +29,7 @@ public class GetActivity extends AppCompatActivity {
     private Button mBtnSend;
     private RecyclerView recyclerView;
     private Handler mHandler;
+    private MyNetRequest myNetRequest;
     private final String mGetUrl = "https://www.wanandroid.com/friend/json";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,53 +47,24 @@ public class GetActivity extends AppCompatActivity {
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-// ⽹络请求
-                sendGetRequest(mGetUrl);
+// ⽹络请求,把网站和Handler传入封装的请求
+               myNetRequest=new MyNetRequest(mGetUrl,mHandler);
             }
         });
-    }
-    private void sendGetRequest(String theUrl){
-        new Thread(
-                () -> {
-                    try {
-                        URL url = new URL(theUrl);
-                        HttpURLConnection connection = (HttpURLConnection)
-                                url.openConnection();
-                        connection.setRequestMethod("GET");//设置请求⽅式为GET
-                        connection.setConnectTimeout(8000);//设置最⼤连接时间，单位
-                        connection.setReadTimeout(8000);//设置最⼤的读取时间，单位为
-                        connection.setRequestProperty("Accept-Language",
-                                "zh-CN,zh;q=0.9");
-                        connection.setRequestProperty("Accept-Encoding",
-                                "gzip,deflate");
-                        connection.connect();//正式连接
-                        InputStream in = connection.getInputStream();//从接⼝处获取
-                        String responseData = StreamToString(in);//这⾥就是服务器返
-                        Message message = new Message();
-                        message.obj = responseData;
-                        mHandler.sendMessage(message);
-                        Log.d("lx", "sendGetNetRequest: "+responseData);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-        ).start();
     }
     private class MyHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-//这个Message msg 就是从另⼀个线程传递过来的数据
-//在这⾥进⾏你要对msg的处理，将JSON字段解析
             String responseData = msg.obj.toString();
             setText(decodeJson(responseData));
         }
     }
     private void setText(BannerData bannerData) {
         ArrayList<Data> data1=new ArrayList<>();
-        for(int i=0;i<4;i++){
+        for(int i =0; i<bannerData.data.size(); i++){
             Data dataContent=new Data();
-        dataContent.setData(bannerData.data.get(i).link);
+        dataContent.setData("第"+(i+1)+"个网站:"+bannerData.data.get(i).link);
         data1.add(dataContent);
     }
         RvAdapter rvAdapter=new RvAdapter(data1);
@@ -130,22 +102,5 @@ public class GetActivity extends AppCompatActivity {
         }
         return bannerData;
     }
-    private String StreamToString(InputStream in) {
-        StringBuilder sb = new StringBuilder();//新建⼀个StringBuilder，⽤于⼀点⼀点
-        String oneLine;//流转换为字符串的⼀⾏
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        try {while ((oneLine = reader.readLine()) != null) {//readLine⽅法将读取⼀⾏
-            sb.append(oneLine).append('\n');//拼接字符串并且增加换⾏，提⾼可读性
-        }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                in.close();//关闭InputStream
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();//将拼接好的字符串返回出去
-    }
+
 }

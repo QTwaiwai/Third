@@ -4,8 +4,8 @@ import java.util.List;
 
 public class BannerData {
     List<DetailData> data;
-    int errorCode;
-    String errorMsg;
+    public int errorCode;
+    public String errorMsg;
     static class DetailData{
         /*"       {\n" +
                 "             \"category\":\"源码\",\n " +
